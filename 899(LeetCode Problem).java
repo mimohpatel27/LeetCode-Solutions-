@@ -1,3 +1,4 @@
+
 class Solution {
     public String orderlyQueue(String s, int k) {
         // first we write the case for k >1
