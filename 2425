@@ -1,0 +1,21 @@
+class Solution {
+    public int xorAllNums(int[] nums1, int[] nums2) {
+        int ans=0;
+        //finding the occurance of 1st array 
+        int m=nums2.length;
+        if((m&1)==1){
+            for(int ele:nums1){
+                ans^=ele;
+            }
+        }
+        // find ing the occurance of 2nd array 
+        int n=nums1.length;
+        if((n&1)==1){
+            for(int ele:nums2){
+                ans^=ele;
+            }
+        }
+        return ans;
+        
+    }
+}
