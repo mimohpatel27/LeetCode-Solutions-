@@ -1,0 +1,56 @@
+class Solution {
+    //first i will create a private space for the some vairable 
+    private static boolean isValid(int x, int y, int m, int n){
+        return x>=0 && x<m && y>=0 && y<n;
+    }
+    public int trapRainWater(int[][] hM) {
+        //hM=heightMap
+        int m=hM.length;
+        int n = hM[0].length;
+        // we need minimum 3X3 matrix to trapped the water 
+        if(m<3||n<3){ 
+            // this is also a base caase 
+            return 0;
+        }
+        //her we are definig the sitution where the minimus element of number = trapped water 
+        // this is a declaration point for minHeap ..
+        //mH=minHeap 
+        PriorityQueue<int[]>mH=new PriorityQueue<>((a,b)->a[0]-b[0]);
+        boolean [][]visited=new boolean[m][n];
+        // step 1 where we are pushing all boundry elements in the start of the poiint;
+        for(int i=0;i<m;i++){
+            for (int j=0;j<n;j++){
+                // implementation point 
+                if(i==0 || i==m-1|| j==0 || j==n-1){
+                    mH.offer(new int[]{hM[i][j],i,j});
+                    visited[i][j]=true;
+                }
+            }
+        }
+        // step 2 Apply bredth first system similarly to the leve order 
+        int level=0;
+        int tW=0;//trappedWater
+        int[]dir={-1,0,1,0,-1};//direction
+        while (!mH.isEmpty()){
+            int[]curr=mH.poll();
+            int h=curr[0];//height 
+            int x=curr[1];
+            int y=curr[2];
+            level=Math.max(level , h);
+            // 4 directional traversal
+            for(int i=0;i<4;i++){
+                int newX= x+dir[i];
+                int newY=y+dir[i+1];
+                if(isValid(newX,newY,m,n)&& !visited[newX][newY]){
+                    visited[newX][newY]=true;
+                    mH.offer(new int []{hM[newX][newY],newX,newY});
+                    if(hM[newX][newY]<level){
+                        tW+=level-hM[newX][newY];
+                    }
+                }
+            }
+        }
+        return tW;
+        
+    }
+}
