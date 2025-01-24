@@ -1,0 +1,29 @@
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] g) {
+        int n =g.length;
+        //graph =g
+        int[] state=new int[n];
+        List<Integer> safe=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(dfs(g,i,state)){
+                safe.add(i);
+            }
+        }
+        return safe;
+        
+    }
+    private boolean dfs(int[][]g, int Node,int[]state){
+        if(state[Node]>0){
+            return state[Node]==2;
+        }
+
+        state[Node]=1;
+        for(int next:g[Node]){
+            if(state[next]==1||!dfs(g,next,state)){
+                return false;
+            }
+        }
+        state[Node]=2;
+        return true;
+    }
+ }
