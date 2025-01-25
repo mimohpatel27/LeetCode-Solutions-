@@ -1,0 +1,66 @@
+import java.util.*;
+
+class Solution {
+    // Helper function to check validity of coordinates
+    private boolean isValid(int x, int y, int m, int n) {
+        return (x >= 0 && x < m && y >= 0 && y < n);
+    }
+
+    public int minCost(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        // Visited array
+        boolean[][] visited = new boolean[m][n];
+
+        // Min-heap priority queue
+        PriorityQueue<int[]> minheap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+
+        // Push starting point (cost, x, y)
+        minheap.offer(new int[]{0, 0, 0});
+
+        // Direction vectors
+        int[] dx = {0, 0, 1, -1};
+        int[] dy = {1, -1, 0, 0};
+
+        while (!minheap.isEmpty()) {
+            int[] curr = minheap.poll();
+            int cost = curr[0];
+            int x = curr[1];
+            int y = curr[2];
+
+            // If already visited, skip
+            if (visited[x][y]) {
+                continue;
+            }
+
+            // Mark current cell as visited
+            visited[x][y] = true;
+
+            // If destination is reached
+            if (x == m - 1 && y == n - 1) {
+                return cost;
+            }
+
+            // Explore neighbors
+            for (int i = 0; i < 4; ++i) {
+                int newX = x + dx[i];
+                int newY = y + dy[i];
+
+                if (isValid(newX, newY, m, n) && !visited[newX][newY]) {
+                    int newCost = cost;
+
+                    // Check if moving in the same direction as grid value
+                    if (grid[x][y] != i + 1) {
+                        newCost += 1;
+                    }
+
+                    // Add to min-heap
+                    minheap.offer(new int[]{newCost, newX, newY});
+                }
+            }
+        }
+
+        return 0;
+    }
+}
