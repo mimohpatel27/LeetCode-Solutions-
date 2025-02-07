@@ -1,0 +1,28 @@
+class Solution {
+    public int[] queryResults(int limit, int[][] queries) {
+        int n=queries.length;
+        Map<Integer,Integer>cF=new HashMap<>();//colorFreq=cF
+        Map<Integer,Integer>bC=new HashMap<>();//bC=ballColor
+
+        List<Integer>res=new ArrayList<>();
+        for(int i=0;i<n;++i){
+            int ball=queries[i][0];
+            int color=queries[i][1];
+            //if ball is already painted remove its preveous color
+            if(bC.containsKey(ball)){
+                int pC=bC.get(ball);//pC=preveous Color
+                cF.put(pC,cF.get(pC)-1);
+                if(cF.get(pC)==0){
+                    cF.remove(pC);
+                }
+            }
+            //painting the ball with new color
+            bC.put(ball,color);
+            cF.put(color,cF.getOrDefault(color,0)+1);
+
+            res.add(cF.size());
+        }
+          return res.stream().mapToInt(Integer::intValue).toArray();
+        
+    }
+}
