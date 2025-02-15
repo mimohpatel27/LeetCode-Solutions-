@@ -1,0 +1,24 @@
+class Solution {
+    public int punishmentNumber(int n) {
+        int pN=0; //pN =punishmentNum //here we store the number 
+        //treverssing the value 
+        for(int curr=1;curr<=n;curr++){
+            int square=curr*curr;
+            if(canPartition(square,curr)){
+                pN+=square;
+            }
+        }
+        return pN;
+        
+    }
+    public boolean canPartition(int num, int target){
+        // invallid 
+        if(num<target || target <0){
+            return false ;
+        }
+        if (num ==target ){
+            return true ;
+        }
+        return (canPartition(num/10,target-(num%10))||canPartition(num/100,target-(num%100))||canPartition(num/1000,target-(num%1000)));
+    }
+}
