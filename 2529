@@ -1,0 +1,22 @@
+class Solution {
+    public int maximumCount(int[] nums) {
+        int pos=bs(nums,0);
+        int neg=nums.length-bs(nums,1);
+        return Math.max(pos, neg);
+    }
+    public int bs(int[]nums,int tar){
+        int l=0;
+        int r=nums.length-1;
+        int res=nums.length;
+        while(l<=r){
+            int mid=l+(r-l)/2;
+            if(nums[mid]<tar){
+                l=mid+1;
+            } else {
+                res=mid;
+                r=mid-1;
+            }
+        }
+        return res;
+    }
+}
