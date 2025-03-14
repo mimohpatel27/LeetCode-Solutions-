@@ -1,0 +1,34 @@
+import java.util.Arrays;
+
+class Solution {
+    public int maximumCandies(int[] candies, long k) {
+        long total = Arrays.stream(candies).asLongStream().sum();  
+        int right = Arrays.stream(candies).max().getAsInt();
+        if (total < k) {
+            return 0;
+        }
+        int left = 1;  
+        int result = 0;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (helper(candies, mid, k)) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
+    }
+
+    private boolean helper(int[] candies, int n, long k) {
+        long total = 0;
+        for (int item : candies) {
+            total += item / n;  
+            if (total >= k) {   
+                return true;
+            }
+        }
+        return total >= k;
+    }
+}
