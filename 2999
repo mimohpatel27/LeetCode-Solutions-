@@ -1,0 +1,55 @@
+class Solution {
+    private long []tens=new long[17];
+    private long []powB=new long[17];
+
+    private void computeTens(){
+        if(tens[0]==1){
+            return;
+        }
+        tens[0]=1;
+        for(int i=1;i<17;i++){
+            tens[i]=tens[i-1]*10;
+        }
+    }
+    private void computePowB(int B){
+        powB[0]=1;
+        for(int i=1;i<17;i++){
+            powB[i]=powB[i-1]*B;
+        }
+    }
+    private long cnt(long num,long suffix,int ds,int limit){
+        if(num<suffix){
+            return 0;
+        }
+        long x0=num;
+        long rem=x0%tens[ds];
+        x0/=tens[ds];
+
+        int d=0;
+        while(d<tens.length && tens[d]<=x0){
+            d++;
+        }
+        long count=0;
+        for(int i=d-1;i>=0;i--){
+            long q=x0/tens[i];
+            if(q>limit){
+                count+=powB[i+1];
+                return count;
+            }
+            count+=powB[i]*q;
+            x0-=q*tens[i];
+        }
+        return count+(rem>=suffix ?1:0);
+    }
+    public long numberOfPowerfulInt(long start, long finish, int limit, String s) {
+        computeTens();
+        computePowB(limit+1);
+
+        long prefix=Long.parseLong(s);
+        int S=s.length();
+        int sStart=(int)Math.log10(start)+1;
+        int sFinish=(int)Math.log10(finish)+1;
+
+        return cnt(finish,prefix,S,limit)-cnt(start-1,prefix,S,limit);
+  }
+}
