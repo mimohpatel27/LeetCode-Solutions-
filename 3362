@@ -1,0 +1,28 @@
+class Solution {
+    public int maxRemoval(int[] nums, int[][] queries) {
+        int n=nums.length;
+        int m=queries.length;
+        int[]wL=new int [n+1]; //workload=wL
+        Arrays.sort(queries,Comparator.comparingInt(a->a[0]));
+        PriorityQueue<Integer>available=new PriorityQueue<>(Collections.reverseOrder());
+
+        int qIndex=0;
+        for(int time=0;time<n;time++){
+            if(time>0){
+                wL[time]+=wL[time-1];
+            }
+            while(qIndex<m && queries[qIndex][0]==time){
+                available.offer(queries[qIndex][1]);
+                qIndex++;
+            }
+            while(wL[time]<nums[time]){
+                if(available.isEmpty() || available.peek()<time){
+                    return -1;
+                }
+                wL[time]++;
+                wL[available.poll()+1]--;
+            }
+        }
+        return available.size();
+    }
+}
