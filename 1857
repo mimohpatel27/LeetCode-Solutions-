@@ -1,0 +1,40 @@
+class Solution {
+    public int largestPathValue(String colors, int[][] edges) {
+        int n=colors.length();
+        List<List<Integer>>graph=new ArrayList<>();
+        int []iD=new int [n];//iD=inDegree
+        for(int i=0;i<n;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[]edge:edges){
+            graph.get(edge[0]).add(edge[1]);
+            iD[edge[1]]++;
+        }
+        int [][]dp=new int[n][26];
+        Queue<Integer>queue=new LinkedList<>();
+        for(int i=0;i<n;i++){
+            if(iD[i]==0){
+                queue.offer(i);
+            }
+        }
+        int visited=0;
+        int mCV=0;//maximum color value=mCV
+        while(!queue.isEmpty()){
+            int node=queue.poll();
+            visited++;
+            int cI=colors.charAt(node)-'a';//color Index=cI
+            dp[node][cI]++;
+            mCV=Math.max(mCV,dp[node][cI]);
+            for(int neighbor:graph.get(node)){
+                for(int c=0;c<26;c++){
+                    dp[neighbor][c]=Math.max(dp[neighbor][c],dp[node][c]);
+                }
+                iD[neighbor]--;
+                if(iD[neighbor]==0){
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        return visited==n?mCV:-1;
+    }
+}
