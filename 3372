@@ -1,0 +1,62 @@
+class Solution {
+    public int[] maxTargetNodes(int[][] e1, int[][] e2, int k) {
+        int n=e1.length+1;
+        int m=e2.length+1;
+        List<List<Integer>>t1=bG(e1,n);
+        //t1=tree 1 ;;; bG=buildGaph
+        List<List<Integer>>t2=bG(e2,m);
+        List<Set<Integer>>allCombi=new ArrayList<>();
+        for(int i=0;i<m;i++){
+            Set<Integer>ans=bfs(t2,i,k-1);
+            allCombi.add(ans);
+        }
+        int ans[]=new int[n];
+        for(int i=0;i<n;i++){
+            Set<Integer>reach=bfs(t1,i,k);
+            int maxi=Integer.MIN_VALUE;
+            for(int j=0;j<m;j++){
+                maxi=Math.max(reach.size()+allCombi.get(j).size(),maxi);
+            }
+            ans[i]=maxi;
+        }
+        return ans;
+    }
+    public Set<Integer>bfs(List<List<Integer>>list,int start,int k){
+        HashSet<Integer>set=new HashSet<>();
+        if(k<0){//base case 
+            return set;
+        }
+        Queue<int[]>q=new LinkedList<>();
+        q.offer(new int []{start,0});
+        set.add(start);
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                int val[]=q.poll();
+                int node=val[0];
+                int level=val[1];
+                if(level==k) continue;
+                for(int neigbor:list.get(node)){
+                    if(!set.contains(neigbor)){
+                        q.offer(new int[]{neigbor,level+1});
+                        set.add(neigbor);
+                    }
+                }
+            }
+        }
+        return set;
+    }
+    private List<List<Integer>>bG(int [][]edges,int size){
+        List<List<Integer>>graph=new ArrayList<>();
+        for(int i=0;i<size;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[]edge:edges){
+            int u=edge[0];
+            int v=edge[1];
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+        return graph;
+    }
+}
